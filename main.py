@@ -8,13 +8,11 @@ from numpy import arange
 import soundfile
 import numpy, scipy
 import pylab
-import scipy
 import copy
 import matplotlib
 import scipy.fftpack
 
 matplotlib.use('tkagg')
-
 
 def findPeak(magnitude_values, noise_level=2000):
     splitter = 0
