@@ -3,7 +3,7 @@ import numpy as np
 import soundfile
 
 
-def find_freq(freqs, noise):
+def find_freq(freqs, noise, n):
     mask = freqs < noise # ve quais valores sao maiores que o ruido
     freqs[mask] = 0 # o que for maior que o ruido passa e o que for menor fica igual a zero
     f = [] # todas frequencias
@@ -20,20 +20,20 @@ def find_freq(freqs, noise):
 
     for x in f:
         if len(x) == 1:
-            res.append(x[0])
+            res.append(int(x[0]/n))
         else:
-            res.append(x[round(len(x)/2)])
+            res.append(int(x[round(len(x)/2)]/n))
 
     return res
 
 
 if __name__ == '__main__':
 
-    file_path = 'audiocheck.net_sin_1000Hz_-3dBFS_3s.wav'
+    file_path = 'audiocheck.net_sin_1576Hz_-3dBFS_3s.wav'
     s, fs = soundfile.read(file_path, dtype='int16')
 
     n = len(s)  # numero de pontos no grafico
-    seg = n-1/fs
+    seg = int((n-1)/fs)
 
     t = np.linspace(0.0, seg, n, endpoint=False)  # valor inicial, valor final, tamanho do vetor ou lista
 
@@ -50,12 +50,11 @@ if __name__ == '__main__':
 
     plt.figure(2)
     plt.title('Na frequência')
-    plt.stem(freq[mascara]*n, fft_abs[mascara])
-    print(freq)
+    plt.stem(freq[mascara]*n/seg, fft_abs[mascara])
     #plt.xlim(0, 20)
     plt.show()
 
-    frequencias = find_freq(fft_abs[mascara], 0.5)
+    frequencias = find_freq(fft_abs[mascara], 20000, seg)
 
     print("Frequências encontradas: ")
 
