@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import soundfile
-
+import wave as w
 
 def find_freq(freqs, noise):
     mask = freqs < noise # ve quais valores sao maiores que o ruido
@@ -29,18 +29,21 @@ def find_freq(freqs, noise):
 
 if __name__ == '__main__':
 
-    seg = 1.0
-    fs = 8000.0  # Frequancia de amostragem em Hz
-    n = int(fs*seg)  # numero de pontos no grafico
+    file_path1 = 'audiocheck.net_sin_1000Hz_-3dBFS_3s.wav'
+    file_path2 = 'audiocheck.net_sin_1576Hz_-3dBFS_3s.wav'
+    # file_path3 = '1000.wav'
+    s1, sample_rate1 = soundfile.read(file_path1, dtype='int16')
+    s2, sample_rate2 = soundfile.read(file_path2, dtype='int16')
+    # s3, sample_rate3 = soundfile.read(file_path3, dtype='int16')
+
+    # s = list(map(lambda v1, v2: v1 + v2, s1, s2))
+    s = s2
+    n = len(s)
+    fs = sample_rate1  # Frequancia de amostragem em Hz
+    seg = (n-1) / fs
+
 
     t = np.linspace(0.0, seg, n, endpoint=False)  # valor inicial, valor final, tamanho do vetor ou lista
-    s1 = 5.0 * np.cos(1000.0*2.0 * np.pi * t)
-    s2 = 5.0 * np.cos(5000.0*2.0 * np.pi * t)
-    s3 = 5.0 * np.cos(3500.0*2.0 * np.pi * t)
-    s = s1 + s2 + s3
-
-    print('max(s): ', max(s))
-
     freq = np.fft.fftfreq(n) # retorna valores negativos e positivos
     mascara = freq > 0  # retorna um vetor com true e false
 
@@ -51,6 +54,10 @@ if __name__ == '__main__':
     plt.title('No tempo')
     plt.plot(t, s)
     plt.xlim(0, 0.005)
+    print('Tamanho t:', len(t))
+    print('Tamanho s:', len(s))
+    print('ex: ', s[0:15])
+    print('sample rate:', sample_rate1)
 
     plt.figure(2)
     plt.title('Na frequência')

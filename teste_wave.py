@@ -29,17 +29,13 @@ def find_freq(freqs, noise):
 
 if __name__ == '__main__':
 
-    seg = 1.0
-    fs = 8000.0  # Frequancia de amostragem em Hz
-    n = int(fs*seg)  # numero de pontos no grafico
+    file_path = 'audiocheck.net_sin_1000Hz_-3dBFS_3s.wav'
+    s, fs = soundfile.read(file_path, dtype='int16')
+
+    n = len(s)  # numero de pontos no grafico
+    seg = n-1/fs
 
     t = np.linspace(0.0, seg, n, endpoint=False)  # valor inicial, valor final, tamanho do vetor ou lista
-    s1 = 5.0 * np.cos(1000.0*2.0 * np.pi * t)
-    s2 = 5.0 * np.cos(5000.0*2.0 * np.pi * t)
-    s3 = 5.0 * np.cos(3500.0*2.0 * np.pi * t)
-    s = s1 + s2 + s3
-
-    print('max(s): ', max(s))
 
     freq = np.fft.fftfreq(n) # retorna valores negativos e positivos
     mascara = freq > 0  # retorna um vetor com true e false
@@ -50,7 +46,7 @@ if __name__ == '__main__':
     plt.figure(1)
     plt.title('No tempo')
     plt.plot(t, s)
-    plt.xlim(0, 0.005)
+    plt.xlim(0, 0.02)
 
     plt.figure(2)
     plt.title('Na frequência')
